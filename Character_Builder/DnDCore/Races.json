@@ -1,0 +1,63 @@
+[
+  {
+    "Name": "Dwarf_base",
+    "Size": "Medium",
+    "Speed": 25,
+    "Languages": [
+      "Dwarvish",
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Dwarven Resilience",
+      "Dwarven Combat Training",
+      "Stonecunning",
+      "Dwarven Tool Proficiency"
+    ],
+    "AbilityChanges": {
+      "Con": 2
+    }
+  },
+  {
+    "Name": "Hill Dwarf",
+    "Size": "Medium",
+    "Speed": 25,
+    "Languages": [
+      "Dwarvish",
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Dwarven Resilience",
+      "Dwarven Combat Training",
+      "Stonecunning",
+      "Dwarven Tool Proficiency",
+      "Dwarven Toughness"
+    ],
+    "AbilityChanges": {
+      "Con": 2,
+      "Wis": 1
+    }
+  },
+  {
+    "Name": "Mountain Dwarf",
+    "Size": "Medium",
+    "Speed": "25",
+    "Languages": [
+      "Dwarvish",
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Dwarven Resilience",
+      "Dwarven Combat Training",
+      "Stonecunning",
+      "Dwarven Tool Proficiency",
+      "Dwarven Armor Training"
+    ],
+    "AbilityChanges": {
+      "Con": 2,
+      "Str": 2
+    }
+  }
+]

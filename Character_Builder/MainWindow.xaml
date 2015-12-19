@@ -8,8 +8,9 @@
         Title="Character Builder" Height="500" Width="1000" ResizeMode="NoResize" Loaded="Window_Loaded">
     <Grid>
         <Button x:Name="button_1" Content="Click Me!" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" TabIndex="0" Click="main_click"/>
-        <TextBox x:Name="output_1" Margin="10,35,10,10" TextWrapping="Wrap" FontSize="10" IsReadOnly="True" TabIndex="3" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="output_1" Margin="10,35,0,10" TextWrapping="Wrap" FontSize="10" IsReadOnly="True" TabIndex="3" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Width="710"/>
         <Button x:Name="exit" Content="Exit" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" TabIndex="2" Click="exit_click"/>
         <Button x:Name="clear" Content="Clear" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" TabIndex="1" Click="clear_click"/>
+        <TextBox x:Name="output_2" Margin="0,35,10,10" TextWrapping="Wrap" FontSize="10" IsReadOnly="True" TabIndex="3" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Width="247"/>
     </Grid>
 </Window>

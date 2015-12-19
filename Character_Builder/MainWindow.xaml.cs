@@ -32,16 +32,23 @@ namespace Character_Builder
 
         private void main_click(object sender, RoutedEventArgs e)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+            
+            blog($"starting: {sw.ElapsedMilliseconds} ms");
+            
             if (!DnDCore.loaded)
             {
                 log("Core data not loaded, try again later");
                 return;
             }
 
-            int numChars = 3, current = 0;
-            int threads = Environment.ProcessorCount < numChars ? Environment.ProcessorCount : numChars;
-            Task[] producers = new Task[threads - 1];
+            int numChars = 1000, current = 0;
+            int threads = Environment.ProcessorCount - 1 < numChars ? Environment.ProcessorCount - 1 : numChars;
+            Task[] producers = new Task[threads];
             string result = "";
+
+            blog(threads.ToString());
 
             using (BlockingCollection<DnDCharacter> party = new BlockingCollection<DnDCharacter>())
             {
@@ -53,7 +60,7 @@ namespace Character_Builder
                         while (current < numChars)
                         {
                             Interlocked.Increment(ref current);
-                            party.Add(new DnDCharacter());
+                            party.TryAdd(new DnDCharacter());
                         }
 
                     });
@@ -64,15 +71,10 @@ namespace Character_Builder
                 {
                     while (!party.IsCompleted)
                     {
-                        try
+                        DnDCharacter temp;
+                        while (party.TryTake(out temp))
                         {
-                            result += $"{party.Take().ToString()}\n\n";
-                        }
-                        catch (InvalidOperationException ioe)
-                        {
-                            result = ioe.Message;
-                            MessageBox.Show("borked it!");
-                            break;
+                            result += $"{temp.ToString()}\n";
                         }
                     }
                 });
@@ -82,7 +84,6 @@ namespace Character_Builder
                 consumer.Wait();
 
                 log(result);
-
             }
 
             //log("\n+++ Races +++\n");
@@ -103,13 +104,18 @@ namespace Character_Builder
             //{
             //    log(thing.ToString());
             //}
-
-
+            sw.Stop();
+            blog($"complate: {sw.ElapsedMilliseconds} ms");
         }
 
         private void log(string message)
         {
             output_1.Text += $"{message}\n";
+        }
+
+        private void blog(string message)
+        {
+            output_2.Text += $"{message}\n";
         }
 
         private void clear_click(object sender, RoutedEventArgs e)

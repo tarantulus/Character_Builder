@@ -20,16 +20,16 @@ namespace DnDSupportTypes
 {
     public static class DnDCore
     {
-        public static readonly bool loaded = false;
-        public static readonly List<DnDRace> Races = new List<DnDRace>();
-        public static readonly List<DnDClass> Classes = new List<DnDClass>();
-        public static readonly List<DnDFeature> Features = new List<DnDFeature>();
-        public static readonly List<string> Attributes = new List<string>();
-        public static readonly List<int> StartingScores = new List<int>();
+        public static bool loaded = false;
+        public static List<DnDRace> Races = new List<DnDRace>();
+        public static List<DnDClass> Classes = new List<DnDClass>();
+        public static List<DnDFeature> Features = new List<DnDFeature>();
+        public static List<string> Attributes = new List<string>();
+        public static List<int> StartingScores = new List<int>();
 
-        private static List<string> Names_Male = new List<string>();
-        private static List<string> Names_Female = new List<string>();
-        private static List<string> Names_Last = new List<string>();
+        public static List<string> Names_Male = new List<string>();
+        public static  List<string> Names_Female = new List<string>();
+        public static  List<string> Names_Last = new List<string>();
 
         static DnDCore()
         {
@@ -232,7 +232,7 @@ namespace DnDSupportTypes
         public string Name = "";
 
         public int XP = 0;
-        public string Gender = "";
+        public bool isMale;
         public string Race = "";
         public string Background = "";
         public DnDClass Class = null;
@@ -253,7 +253,8 @@ namespace DnDSupportTypes
 
         public DnDCharacter()
         {
-            Name = createName();
+            isMale = pickSex();
+            Name = createName(isMale);
 
             var tempAttr = DnDCore.StartingScores.ToList();
             foreach (var attr in DnDCore.Attributes)
@@ -265,14 +266,29 @@ namespace DnDSupportTypes
             }
         }
 
+        private bool pickSex()
+        {
+            return rand.NextDouble() < .5;
+        }
+
         private int AttrMod(int attributeScore)
         {
             return (int)Math.Floor((double)(attributeScore - 10) / 2);
         }
 
-        private string createName()
+        private string createName(bool isMale)
         {
-            return "Titanious Englesmith, Fancy-man of Cornwood";
+            string name = "";
+            if (isMale)
+            {
+                name = DnDCore.Names_Male[rand.Next(DnDCore.Names_Male.Count)];
+            } else
+            {
+                name = DnDCore.Names_Female[rand.Next(DnDCore.Names_Female.Count)];
+            }
+
+            name += " " + DnDCore.Names_Last[rand.Next(DnDCore.Names_Last.Count)];
+            return name;
         }
 
         public override string ToString()

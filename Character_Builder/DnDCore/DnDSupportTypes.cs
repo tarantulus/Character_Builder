@@ -28,8 +28,8 @@ namespace DnDSupportTypes
         public static List<int> StartingScores = new List<int>();
 
         public static List<string> Names_Male = new List<string>();
-        public static  List<string> Names_Female = new List<string>();
-        public static  List<string> Names_Last = new List<string>();
+        public static List<string> Names_Female = new List<string>();
+        public static List<string> Names_Last = new List<string>();
 
         static DnDCore()
         {
@@ -172,7 +172,7 @@ namespace DnDSupportTypes
             race = race.Remove(race.Length - 2, 1) + "\nAbility Changes: ";
             foreach (var ac in AbilityChanges)
             {
-                race += $"{ac.Key}" + (ac.Value >= 0 ? $"+{ac.Value}" : $"-{ac.Value}")+", ";
+                race += $"{ac.Key}" + (ac.Value >= 0 ? $"+{ac.Value}" : $"-{ac.Value}") + ", ";
             }
             race = race.Remove(race.Length - 2, 1) + "\n";
 
@@ -213,7 +213,7 @@ namespace DnDSupportTypes
 
         public override string ToString()
         {
-            string feature=$"Feature: {Name}\n{Description}\n";
+            string feature = $"Feature: {Name}\n{Description}\n";
             return feature;
         }
     }
@@ -232,11 +232,11 @@ namespace DnDSupportTypes
         public string Name = "";
 
         public int XP = 0;
-        public bool isMale;
-        public string Race = "";
+        public bool isMale = true;
+        public DnDRace Race = null;
         public string Background = "";
         public DnDClass Class = null;
-        public int Level = 0;
+        public int Level = 1;
         public int ProficiencyBonus = 0;
         public int AC = 0;
         public int Initiative = 0;
@@ -253,9 +253,23 @@ namespace DnDSupportTypes
 
         public DnDCharacter()
         {
-            isMale = pickSex();
-            Name = createName(isMale);
+            pickSex();
+            createName();
 
+            setRace();
+            setClass();
+            setAttributes();
+            setSaves();
+
+        }
+
+        private void setSaves()
+        {
+            Saves = new Dictionary<string, int>();
+        }
+
+        private void setAttributes()
+        {
             var tempAttr = DnDCore.StartingScores.ToList();
             foreach (var attr in DnDCore.Attributes)
             {
@@ -266,9 +280,34 @@ namespace DnDSupportTypes
             }
         }
 
-        private bool pickSex()
+        private void setClass()
         {
-            return rand.NextDouble() < .5;
+            Class = DnDCore.Classes[rand.Next(DnDCore.Classes.Count)];
+
+            foreach (var f in Class.Progression)
+            {
+                if (Level >= f.Value)
+                {
+                    try
+                    {
+                        ClassFeatures.Add(DnDCore.Features.Single(z => z.Name.Equals(f.Key)));
+                    }
+                    catch (InvalidOperationException ioe)
+                    {
+                        MessageBox.Show(ioe.Message);
+                    }
+                }
+            }
+        }
+
+        private void setRace()
+        {
+            Race =  DnDCore.Races[rand.Next(DnDCore.Races.Count)];
+        }
+
+        private void pickSex()
+        {
+            isMale= rand.NextDouble() < .5;
         }
 
         private int AttrMod(int attributeScore)
@@ -276,28 +315,30 @@ namespace DnDSupportTypes
             return (int)Math.Floor((double)(attributeScore - 10) / 2);
         }
 
-        private string createName(bool isMale)
+        private void createName()
         {
             string name = "";
             if (isMale)
             {
                 name = DnDCore.Names_Male[rand.Next(DnDCore.Names_Male.Count)];
-            } else
+            }
+            else
             {
                 name = DnDCore.Names_Female[rand.Next(DnDCore.Names_Female.Count)];
             }
 
             name += " " + DnDCore.Names_Last[rand.Next(DnDCore.Names_Last.Count)];
-            return name;
+            Name= name;
         }
 
         public override string ToString()
         {
-            string output = $"{Name}\nCharacter Attributes:\n";
+            string output = $"{Name}\nLevel {Level} {Race.Name} {Class.Name}\n";
             foreach (var kvp in Attributes)
             {
                 output += $"{kvp.Key}  {kvp.Value},  mod {AttributeMods[kvp.Key]}\n";
             }
+
             return output;
         }
     }

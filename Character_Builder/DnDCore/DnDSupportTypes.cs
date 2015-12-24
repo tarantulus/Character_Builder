@@ -1,29 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Newtonsoft.Json;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Windows;
+using Newtonsoft.Json;
 
 namespace DnDSupportTypes
 {
     public static class DnDCore
     {
         public static bool loaded = false;
+        public static bool verbose = false;
         public static List<DnDRace> Races = new List<DnDRace>();
         public static List<DnDClass> Classes = new List<DnDClass>();
         public static List<DnDFeature> Features = new List<DnDFeature>();
+        public static List<DnDSkill> Skills = new List<DnDSkill>();
         public static List<string> Attributes = new List<string>();
         public static List<int> StartingScores = new List<int>();
 
@@ -37,6 +28,7 @@ namespace DnDSupportTypes
             initRaces();
             initClasses();
             initNames();
+            initSkills();
 
             Attributes = new List<string>() { "Str", "Dex", "Con", "Int", "Wis", "Cha" };
             StartingScores = new List<int>() { 15, 14, 13, 12, 10, 8 };
@@ -133,6 +125,26 @@ namespace DnDSupportTypes
                 MessageBox.Show(e.Message);
             }
         }
+
+        private static void initSkills()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader("DnDCore\\Skills.json"))
+                {
+                    var skillJSON = JsonConvert.DeserializeObject<List<DnDSkill>>(sr.ReadToEnd());
+
+                    foreach (var s in skillJSON)
+                    {
+                        Skills.Add(s);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
     }
 
     public class DnDRace
@@ -194,9 +206,53 @@ namespace DnDSupportTypes
 
         public override string ToString()
         {
-            string outclass = "";
+            string outclass = $"{Name}\n{Description}\nHit Die: {HitDieType}\nPrimary Abilities:";
+            foreach (var pa in PrimaryAbilities)
+            {
+                outclass += $" {pa},";
+            }
+            outclass = outclass.Remove(outclass.Length - 1, 1) + "\nSave Proficiencies:";
+            foreach (var sp in SaveProficiencies)
+            {
+                outclass += $" {sp},";
+            }
+            outclass = outclass.Remove(outclass.Length - 1, 1) + "\nGear Proficiencies:";
+            foreach (var gp in GearProficiencies)
+            {
+                outclass += $" {gp},";
+            }
+            outclass = outclass.Remove(outclass.Length - 1, 1) + $"\nClass Skills - {numSkills} from the following:";
+            foreach (var cs in ClassSkills)
+            {
+                outclass += $" {cs},";
+            }
+            outclass = outclass.Remove(outclass.Length - 1, 1) + $"\nFeature Progression:\n";
+
+            var Prog = populateProgression();
+
+            foreach (var cp in Prog)
+            {
+                outclass += $"{cp.Key}\t{cp.Value}\n";
+            }
 
             return outclass;
+        }
+
+        private Dictionary<int, string> populateProgression()
+        {
+            var temp = new Dictionary<int, string>();
+            foreach (var p in Progression)
+            {
+                if (!temp.ContainsKey(p.Value))
+                {
+                    temp.Add(p.Value, p.Key);
+                }
+                else
+                {
+                    temp[p.Value] += $", {p.Key}";
+                }
+            }
+            return temp;
         }
     }
 
@@ -213,16 +269,30 @@ namespace DnDSupportTypes
 
         public override string ToString()
         {
-            string feature = $"Feature: {Name}\n{Description}\n";
-            return feature;
+            return $"{Name}\n\t{Description}\n";
         }
     }
 
     public class DnDSkill
     {
         public string Name;
-        public string Description;
         public string AbilityMod;
+
+        public DnDSkill(string name, string ability)
+        {
+            Name = name;
+            AbilityMod = ability;
+        }
+
+        public override string ToString()
+        {
+            return $"({AbilityMod}){Name}";
+        }
+    }
+
+    public class DnDBackground
+    {
+
     }
 
     public class DnDCharacter
@@ -234,7 +304,7 @@ namespace DnDSupportTypes
         public int XP = 0;
         public bool isMale = true;
         public DnDRace Race = null;
-        public string Background = "";
+        public DnDBackground Background;
         public DnDClass Class = null;
         public int Level = 1;
         public int ProficiencyBonus = 0;
@@ -260,6 +330,8 @@ namespace DnDSupportTypes
             setClass();
             setAttributes();
             setSaves();
+
+            ProficiencyBonus = 1 + (int)Math.Ceiling(Level * .25);
 
         }
 
@@ -302,12 +374,17 @@ namespace DnDSupportTypes
 
         private void setRace()
         {
-            Race =  DnDCore.Races[rand.Next(DnDCore.Races.Count)];
+            Race = DnDCore.Races[rand.Next(DnDCore.Races.Count)];
+
+            foreach (var r in Race.RacialFeatures)
+            {
+                RacialFeatures.Add(r);
+            }
         }
 
         private void pickSex()
         {
-            isMale= rand.NextDouble() < .5;
+            isMale = rand.NextDouble() < .5;
         }
 
         private int AttrMod(int attributeScore)
@@ -328,16 +405,35 @@ namespace DnDSupportTypes
             }
 
             name += " " + DnDCore.Names_Last[rand.Next(DnDCore.Names_Last.Count)];
-            Name= name;
+            Name = name;
         }
 
         public override string ToString()
         {
-            string output = $"{Name}\nLevel {Level} {Race.Name} {Class.Name}\n";
+            var verbose = DnDCore.verbose;
+            string output = $"{Name}\nLevel {Level} {Race.Name} {Class.Name}\nProficiency Bonus: +{ProficiencyBonus}\n\n";
             foreach (var kvp in Attributes)
             {
                 output += $"{kvp.Key}  {kvp.Value},  mod {AttributeMods[kvp.Key]}\n";
             }
+
+            output += $"\nRacial Features\n";
+            foreach (var kvp in RacialFeatures)
+            {
+                output += verbose ? $"\n{kvp.Name}\n\t{kvp.Description}\n" : $"{kvp.Name}, ";
+            }
+            if (!verbose) { output = output.Remove(output.Length - 2, 2); }
+
+            output += $"\nClass Features\n";
+            foreach (var kvp in ClassFeatures)
+            {
+                output += verbose ? $"\n{kvp.Name}\n\t{kvp.Description}\n" : $"{kvp.Name}, ";
+            }
+            if (!verbose) { output = output.Remove(output.Length - 2, 2); }
+
+
+
+
 
             return output;
         }

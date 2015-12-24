@@ -1,0 +1,38 @@
+﻿[
+  {
+    "Name": "Barbarian",
+    "Description": "Angry man smash!",
+    "HitDieType": 12,
+    "PrimaryAbilities": [
+      "Str",
+      "Con"
+    ],
+    "SaveProficiencies": [
+      "Fort",
+      "Will"
+    ],
+    "GearProficiencies": [
+      "Light Armor",
+      "Medium Armor",
+      "Shields",
+      "Simple Weapons",
+      "Martial Weapons"
+    ],
+    "Progression": {
+      "Rage": 1,
+      "Unarmored Defense": 1,
+      "Reckless Attack": 2,
+      "Danger Sense": 2,
+      "Primal Path": 3
+    },
+    "ClassSkills": [
+      "Animal Handling",
+      "Athletics",
+      "Intimidation",
+      "Nature",
+      "Perception",
+      "Survival"
+    ],
+    "NumSkills": 2
+  }
+]

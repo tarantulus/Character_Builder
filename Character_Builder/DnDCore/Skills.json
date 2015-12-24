@@ -1,0 +1,74 @@
+﻿[
+  {
+    "Name": "Athletics",
+    "AbilityMod": "Str"
+  },
+  {
+    "Name": "Acrobatics",
+    "AbilityMod": "Dex"
+  },
+  {
+    "Name": "Sleight of Hand",
+    "AbilityMod": "Dex"
+  },
+  {
+    "Name": "Stealth",
+    "AbilityMod": "Dex"
+  },
+  {
+    "Name": "Arcana",
+    "AbilityMod": "Int"
+  },
+  {
+    "Name": "History",
+    "AbilityMod": "Int"
+  },
+  {
+    "Name": "Investigation",
+    "AbilityMod": "Int"
+  },
+  {
+    "Name": "Nature",
+    "AbilityMod": "Int"
+  },
+  {
+    "Name": "Religion",
+    "AbilityMod": "Int"
+  },
+  {
+    "Name": "Animal Handling",
+    "AbilityMod": "Wis"
+  },
+  {
+    "Name": "Insight",
+    "AbilityMod": "Wis"
+  },
+  {
+    "Name": "Medicine",
+    "AbilityMod": "Wis"
+  },
+  {
+    "Name": "Perception",
+    "AbilityMod": "Wis"
+  },
+  {
+    "Name": "Survival",
+    "AbilityMod": "Wis"
+  },
+  {
+    "Name": "Deception",
+    "AbilityMod": "Cha"
+  },
+  {
+    "Name": "Intimidation",
+    "AbilityMod": "Cha"
+  },
+  {
+    "Name": "Performance",
+    "AbilityMod": "Cha"
+  },
+  {
+    "Name": "Persuasion",
+    "AbilityMod": "Cha"
+  }
+]

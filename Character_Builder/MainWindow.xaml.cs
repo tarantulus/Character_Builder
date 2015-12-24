@@ -1,22 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Newtonsoft.Json;
 using DnDSupportTypes;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Diagnostics;
 
 namespace Character_Builder
 {
@@ -25,6 +12,9 @@ namespace Character_Builder
     /// </summary>
     public partial class MainWindow : Window
     {
+        BlockingCollection<DnDCharacter> party = new BlockingCollection<DnDCharacter>(100);
+        Task[] producers;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,76 +24,28 @@ namespace Character_Builder
         {
             var sw = new Stopwatch();
             sw.Start();
-            
+
             blog($"starting: {sw.ElapsedMilliseconds} ms");
-            
+
             if (!DnDCore.loaded)
             {
                 log("Core data not loaded, try again later");
                 return;
             }
 
-            int numChars = 1000, current = 0;
-            int threads = Environment.ProcessorCount - 1 < numChars ? Environment.ProcessorCount - 1 : numChars;
-            Task[] producers = new Task[threads];
-            string result = "";
+            int numChars = 1, current = 0;
 
-            blog(threads.ToString());
-
-            using (BlockingCollection<DnDCharacter> party = new BlockingCollection<DnDCharacter>())
+            while (current < numChars)
             {
-                //spin up multiple producer threads
-                for (int i = 0; i < producers.Length; i++)
+                DnDCharacter temp;
+                if (party.TryTake(out temp))
                 {
-                    producers[i] = Task.Run(() =>
-                    {
-                        while (current < numChars)
-                        {
-                            Interlocked.Increment(ref current);
-                            party.TryAdd(new DnDCharacter());
-                        }
-
-                    });
+                    log($"{temp.ToString()}\n");
+                    current++;
                 }
-
-                //spin up simgle consumer thread
-                var consumer = Task.Run(() =>
-                {
-                    while (!party.IsCompleted)
-                    {
-                        DnDCharacter temp;
-                        while (party.TryTake(out temp))
-                        {
-                            result += $"{temp.ToString()}\n";
-                        }
-                    }
-                });
-
-                Task.WaitAll(producers);
-                party.CompleteAdding();
-                consumer.Wait();
-
-                log(result);
             }
+            
 
-            //log("\n+++ Races +++\n");
-            //foreach (var thing in DnDCore.Races)
-            //{
-            //    log(thing.ToString());
-            //}
-
-            //log("\n+++ Classes +++\n");
-            //foreach (var thing in DnDCore.Classes)
-            //{
-            //    string testing = JsonConvert.SerializeObject(thing);
-            //    log(testing);
-            //}
-
-            //log("\n+++ Features +++\n");
-            //foreach (var thing in DnDCore.Features)
-            //{
-            //    log(thing.ToString());
-            //}
             sw.Stop();
             blog($"complate: {sw.ElapsedMilliseconds} ms");
         }
@@ -131,6 +73,67 @@ namespace Character_Builder
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             bool pointless = DnDCore.loaded;
+
+            //spin up multiple producer threads
+            producers = new Task[5];
+            for (int i = 0; i < producers.Length; i++)
+            {
+                producers[i] = Task.Run(() =>
+                {
+                    while (!party.IsAddingCompleted)
+                    {
+                        try
+                        {
+                            party.Add(new DnDCharacter());
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            break;
+                        }
+                    }
+                });
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            party.CompleteAdding();
+            Task.WaitAll(producers);
+            party.Dispose();
+            foreach (var a in producers)
+            {
+                a.Dispose();
+            }
+        }
+
+        private void button_2_Click(object sender, RoutedEventArgs e)
+        {
+            string a = "+++ Races +++\n\n";
+            foreach (var r in DnDCore.Races)
+            {
+                a += $"{r.ToString()}\n";
+            }
+            a += $"+++ Classes +++\n\n";
+            foreach (var r in DnDCore.Classes)
+            {
+                a += $"{r.ToString()}\n";
+            }
+            a += $"+++ Features +++\n\n";
+            foreach (var r in DnDCore.Features)
+            {
+                a += $"{r.ToString()}\n";
+            }
+            blog(a);
+        }
+
+        private void verbosity_Checked(object sender, RoutedEventArgs e)
+        {
+            DnDCore.verbose = true;
+        }
+
+        private void verbosity_Unchecked(object sender, RoutedEventArgs e)
+        {
+            DnDCore.verbose = false;
         }
     }
 }

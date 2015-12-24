@@ -59,5 +59,91 @@
       "Con": 2,
       "Str": 2
     }
+  },
+  {
+    "Name": "Elf_base",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Elvish",
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Keen Senses",
+      "Fey Ancestry",
+      "Trance"
+    ],
+    "AbilityChanges": {
+      "Dex": 2
+    }
+  },
+  {
+    "Name": "High Elf",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Elvish",
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Keen Senses",
+      "Fey Ancestry",
+      "Trance",
+      "Elf Weapon Training",
+      "Cantrip (Int)",
+      "Extra Language"
+    ],
+    "AbilityChanges": {
+      "Dex": 2,
+      "Int": 1
+    }
+  },
+  {
+    "Name": "Wood Elf",
+    "Size": "Medium",
+    "Speed": 35,
+    "Languages": [
+      "Elvish",
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Keen Senses",
+      "Fey Ancestry",
+      "Trance",
+      "Elf Weapon Training",
+      "Fleet of Foot",
+      "Mask of the Wild"
+    ],
+    "AbilityChanges": {
+      "Dex": 2,
+      "Wis": 1
+    }
+  },
+  {
+    "Name": "Dark Elf (Drow)",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Elvish",
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Keen Senses",
+      "Fey Ancestry",
+      "Trance",
+      "Superior Darkvision",
+      "Sunlight Sensitivity",
+      "Drow Magic",
+      "Drow Weapon Training"
+    ],
+    "AbilityChanges": {
+      "Dex": 2,
+      "Cha": 1
+    }
   }
+
 ]

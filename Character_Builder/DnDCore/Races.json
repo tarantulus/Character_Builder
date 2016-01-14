@@ -1,6 +1,16 @@
+/*
+
+  the order things are listed in matters here. Race groups that include subraces MUST have the shared
+  base race listed FIRST. ie: dwarf shared base race comes before hill and mountain dwarf subraces.
+
+  If this ordering is violated, subrace will attempt to read a non-existant base race and the program will explode.
+
+  */
 [
+  /* +++ DWARF +++ */
   {
-    "Name": "Dwarf_base",
+    "Name": "Dwarf",
+    "BaseRace": "",
     "Size": "Medium",
     "Speed": 25,
     "Languages": [
@@ -20,48 +30,34 @@
   },
   {
     "Name": "Hill Dwarf",
-    "Size": "Medium",
-    "Speed": 25,
-    "Languages": [
-      "Dwarvish",
-      "Common"
-    ],
+    "BaseRace": "Dwarf",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [ ],
     "RacialFeatures": [
-      "Darkvision",
-      "Dwarven Resilience",
-      "Dwarven Combat Training",
-      "Stonecunning",
-      "Dwarven Tool Proficiency",
       "Dwarven Toughness"
     ],
     "AbilityChanges": {
-      "Con": 2,
       "Wis": 1
     }
   },
   {
     "Name": "Mountain Dwarf",
-    "Size": "Medium",
-    "Speed": "25",
-    "Languages": [
-      "Dwarvish",
-      "Common"
-    ],
+    "BaseRace": "Dwarf",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [ ],
     "RacialFeatures": [
-      "Darkvision",
-      "Dwarven Resilience",
-      "Dwarven Combat Training",
-      "Stonecunning",
-      "Dwarven Tool Proficiency",
       "Dwarven Armor Training"
     ],
     "AbilityChanges": {
-      "Con": 2,
       "Str": 2
     }
   },
+  /* +++ ELF +++ */
   {
-    "Name": "Elf_base",
+    "Name": "Elf",
+    "BaseRace": "",
     "Size": "Medium",
     "Speed": 30,
     "Languages": [
@@ -80,70 +76,242 @@
   },
   {
     "Name": "High Elf",
-    "Size": "Medium",
-    "Speed": 30,
-    "Languages": [
-      "Elvish",
-      "Common"
-    ],
+    "BaseRace": "Elf",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [ ],
     "RacialFeatures": [
-      "Darkvision",
-      "Keen Senses",
-      "Fey Ancestry",
-      "Trance",
       "Elf Weapon Training",
       "Cantrip (Int)",
       "Extra Language"
     ],
     "AbilityChanges": {
-      "Dex": 2,
       "Int": 1
     }
   },
   {
     "Name": "Wood Elf",
-    "Size": "Medium",
+    "BaseRace": "Elf",
+    "Size": "",
     "Speed": 35,
-    "Languages": [
-      "Elvish",
-      "Common"
-    ],
+    "Languages": [ ],
     "RacialFeatures": [
-      "Darkvision",
-      "Keen Senses",
-      "Fey Ancestry",
-      "Trance",
       "Elf Weapon Training",
       "Fleet of Foot",
       "Mask of the Wild"
     ],
     "AbilityChanges": {
-      "Dex": 2,
       "Wis": 1
     }
   },
   {
     "Name": "Dark Elf (Drow)",
-    "Size": "Medium",
-    "Speed": 30,
-    "Languages": [
-      "Elvish",
-      "Common"
-    ],
+    "BaseRace": "Elf",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [ ],
     "RacialFeatures": [
-      "Darkvision",
-      "Keen Senses",
-      "Fey Ancestry",
-      "Trance",
       "Superior Darkvision",
       "Sunlight Sensitivity",
       "Drow Magic",
       "Drow Weapon Training"
     ],
     "AbilityChanges": {
-      "Dex": 2,
       "Cha": 1
     }
+  },
+  /* +++ HALFLING +++ */
+  {
+    "Name": "Halfling",
+    "BaseRace": "",
+    "Size": "Small",
+    "Speed": 25,
+    "Languages": [
+      "Common",
+      "Halfling"
+    ],
+    "RacialFeatures": [
+      "Lucky",
+      "Brave",
+      "Halfling Nimbleness"
+    ],
+    "AbilityChanges": {
+      "Dex": 2
+    }
+  },
+  {
+    "Name": "Lightfoot Halfling",
+    "BaseRace": "Halfling",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [ ],
+    "RacialFeatures": [
+      "Naturally Stealthy"
+    ],
+    "AbilityChanges": {
+      "Cha": 1
+    }
+  },
+  {
+    "Name": "Stout Halfling",
+    "BaseRace": "Halfling",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [ ],
+    "RacialFeatures": [
+      "Stout Resilience"
+    ],
+    "AbilityChanges": {
+      "Con": 1
+    }
+  },
+  /* +++ HUMAN +++ */
+  {
+    "Name": "Human",
+    "BaseRace": "Human",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Common"
+    ],
+    "RacialFeatures": [
+      "Extra Language"
+    ],
+    "AbilityChanges": {
+      "Str": 1,
+      "Dex": 1,
+      "Con": 1,
+      "Int": 1,
+      "Wis": 1,
+      "Cha": 1
+    }
+  },
+  /* +++ DRAGONBORN +++ */
+  {
+    "Name": "Dragonborn",
+    "BaseRace": "Dragonborn",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Common",
+      "Draconic"
+    ],
+    "RacialFeatures": [
+      "Draconic Ancestry",
+      "Breath Weapon",
+      "Damage Resistance"
+    ],
+    "AbilityChanges": {
+      "Str": 2,
+      "Cha": 1
+    }
+  },
+  /* +++ GNOME +++ */
+  {
+    "Name": "Gnome",
+    "BaseRace": "",
+    "Size": "Small",
+    "Speed": 25,
+    "Languages": [
+      "Common",
+      "Gnomish"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Gnome Cunning"
+    ],
+    "AbilityChanges": {
+      "Int": 2
+    }
+  },
+  {
+    "Name": "Forest Gnome",
+    "BaseRace": "Gnome",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [],
+    "RacialFeatures": [
+      "Natural Illusionist",
+      "Speak with Small Beasts"
+    ],
+    "AbilityChanges": {
+      "Dex": 1
+    }
+  },
+  {
+    "Name": "Rock Gnome",
+    "BaseRace": "Gnome",
+    "Size": "",
+    "Speed": 0,
+    "Languages": [],
+    "RacialFeatures": [
+      "Artificer's Lore",
+      "Tinker"
+    ],
+    "AbilityChanges": {
+      "Con": 1
+    }
+  },
+  /* +++ HALF-ELF +++ */
+  {
+    "Name": "Half-Elf",
+    "BaseRace": "Half-Elf",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Common",
+      "Elvish"
+    ],
+    "RacialFeatures": [
+      "Extra Language",
+      "Darkvision",
+      "Fey Ancestry",
+      "Skill Versatility",
+      "Ability Score Increase (2)"
+    ],
+    "AbilityChanges": {
+      "Cha": 2
+    }
+  },
+  /* +++ HALF-ORC +++ */
+  {
+    "Name": "Half-Orc",
+    "BaseRace": "Half-Orc",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Common",
+      "Orc"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Menacing",
+      "Relentless Endurance",
+      "Savage Attacks"
+    ],
+    "AbilityChanges": {
+      "Str": 2,
+      "Con": 1
+    }
+  },
+  /* +++ TIEFLING +++ */
+  {
+    "Name": "Tiefling",
+    "BaseRace": "Tiefling",
+    "Size": "Medium",
+    "Speed": 30,
+    "Languages": [
+      "Common",
+      "Infernal"
+    ],
+    "RacialFeatures": [
+      "Darkvision",
+      "Hellish Resistance",
+      "Infernal Legacy"
+    ],
+    "AbilityChanges": {
+      "Int": 1,
+      "Cha": 2
+    }
   }
-
 ]

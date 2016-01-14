@@ -1,0 +1,24 @@
+﻿[
+  /* +++ Barbarian +++ */
+  {
+    "Name": "Path of the Berserker",
+    "BaseClass": "Barbarian",
+    "Progression": {
+      "Frenzy": 3,
+      "Mindless Rage": 6,
+      "Intimidating Presence": 10,
+      "Retaliation": 14
+    }
+  },
+  {
+    "Name": "Path of the Totem Warrior",
+    "BaseClass": "Barbarian",
+    "Progression": {
+      "Spirit Seeker": 3,
+      "Totem Spirit": 3,
+      "Aspect of the Beast": 6,
+      "Spirit Walker":  10,
+      "Totemic Attunement": 14
+    }
+  }
+]

@@ -27,7 +27,7 @@ namespace Character_Builder
 
             blog($"starting: {sw.ElapsedMilliseconds} ms");
 
-            if (!DnDCore.loaded)
+            if (!DnDCore.hasLoadSuccess)
             {
                 log("Core data not loaded, try again later");
                 return;
@@ -44,7 +44,7 @@ namespace Character_Builder
                     current++;
                 }
             }
-            
+
 
             sw.Stop();
             blog($"complate: {sw.ElapsedMilliseconds} ms");
@@ -63,6 +63,7 @@ namespace Character_Builder
         private void clear_click(object sender, RoutedEventArgs e)
         {
             output_1.Text = "";
+            output_2.Text = "";
         }
 
         private void exit_click(object sender, RoutedEventArgs e)
@@ -72,9 +73,18 @@ namespace Character_Builder
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            bool pointless = DnDCore.loaded;
+            // if the dndcore hasn't loaded properly, this outputs the exceptions, warns the user, and stops the program dead.
+            if (!DnDCore.hasLoadSuccess)
+            {
+                foreach (var ex in DnDCore.BOOM)
+                {
+                    log($"\n\n{ex.Message}\n{ex.StackTrace}");
+                }
+                log($"\nAny further attempt to interact with this program will fail.");
+                return;
+            }
 
-            //spin up multiple producer threads
+            // spin up multiple producer threads
             producers = new Task[5];
             for (int i = 0; i < producers.Length; i++)
             {
@@ -98,12 +108,15 @@ namespace Character_Builder
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             party.CompleteAdding();
-            Task.WaitAll(producers);
-            party.Dispose();
-            foreach (var a in producers)
+            if (producers != null)
             {
-                a.Dispose();
+                Task.WaitAll(producers);
+                foreach (var a in producers)
+                {
+                    a.Dispose();
+                }
             }
+            party.Dispose();
         }
 
         private void button_2_Click(object sender, RoutedEventArgs e)
@@ -118,10 +131,15 @@ namespace Character_Builder
             {
                 a += $"{r.ToString()}\n";
             }
-            a += $"+++ Features +++\n\n";
-            foreach (var r in DnDCore.Features)
+            a += $"+++ Subclasses +++\n\n";
+            foreach (var r in DnDCore.SubClasses)
             {
                 a += $"{r.ToString()}\n";
+            }
+            a += $"+++ Features +++\n";
+            foreach (var r in DnDCore.Features)
+            {
+                a += $"\n{r.ToString()}\n";
             }
             blog(a);
         }

@@ -1,18 +1,6 @@
 ﻿[
-  /*
-        public string Name;
-        public string Description;
-        public int HitDieType;
-        public string[] PrimaryAbilities;
-        public string[] SaveProficiencies;
-        public string GearProficiencies;
-        public Dictionary<string, int> Progression = new Dictionary<string, int>();
-
-  */
-
   {
     "Name": "Barbarian",
-    "Description": "Angry man smash!",
     "HitDieType": 12,
     "PrimaryAbilities": [
       "Str",
@@ -34,7 +22,22 @@
       "Unarmored Defense": 1,
       "Reckless Attack": 2,
       "Danger Sense": 2,
-      "Primal Path": 3
+      "Primal Path": 3,
+      "Ability Score Improvement (1)": 4,
+      "Ability Score Improvement (2)": 8,
+      "Ability Score Improvement (3)": 12,
+      "Ability Score Improvement (4)": 16,
+      "Ability Score Improvement (5)": 19,
+      "Extra Attack (1)": 5,
+      "Fast Movement": 5,
+      "Feral Instinct": 7,
+      "Brutal Critical (1)": 9,
+      "Brutal Critical (2)": 13,
+      "Brutal Critical (3)": 17,
+      "Relentless Rage": 11,
+      "Persistent Rage": 15,
+      "Indomitable Might": 18,
+      "Primal Champion": 20
     },
     "ClassSkills": [
       "Animal Handling",

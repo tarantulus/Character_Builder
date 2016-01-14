@@ -9,10 +9,13 @@ namespace DnDSupportTypes
 {
     public static class DnDCore
     {
-        public static bool loaded = false;
+        public static bool hasLoadSuccess = false;
         public static bool verbose = false;
+        public static List<Exception> BOOM = new List<Exception>();
+
         public static List<DnDRace> Races = new List<DnDRace>();
         public static List<DnDClass> Classes = new List<DnDClass>();
+        public static List<DnDSubClass> SubClasses = new List<DnDSubClass>();
         public static List<DnDFeature> Features = new List<DnDFeature>();
         public static List<DnDSkill> Skills = new List<DnDSkill>();
         public static List<string> Attributes = new List<string>();
@@ -24,125 +27,132 @@ namespace DnDSupportTypes
 
         static DnDCore()
         {
-            initFeatures();
-            initRaces();
-            initClasses();
-            initNames();
-            initSkills();
+            try
+            {
+                initFeatures();
+                initRaces();
+                initClasses();
+                initSubClasses();
+                initNames();
+                initSkills();
 
-            Attributes = new List<string>() { "Str", "Dex", "Con", "Int", "Wis", "Cha" };
-            StartingScores = new List<int>() { 15, 14, 13, 12, 10, 8 };
+                Attributes = new List<string>() { "Str", "Dex", "Con", "Int", "Wis", "Cha" };
+                StartingScores = new List<int>() { 15, 14, 13, 12, 10, 8 };
 
+                // this has to be the last line!
+                hasLoadSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                BOOM.Add(ex);
+                hasLoadSuccess = false;
+            }
+        }
 
-            // this has to be the last line!
-            loaded = true;
+        private static void initSubClasses()
+        {
+            using (StreamReader sr = new StreamReader("DnDCore\\SubClasses.json"))
+            {
+                var classJSON = JsonConvert.DeserializeObject<List<DnDSubClass>>(sr.ReadToEnd());
+
+                foreach (var r in classJSON)
+                {
+                    SubClasses.Add(r);
+                }
+            }
         }
 
         private static void initClasses()
         {
-            try
+            using (StreamReader sr = new StreamReader("DnDCore\\Classes.json"))
             {
-                using (StreamReader sr = new StreamReader("DnDCore\\Classes.json"))
-                {
-                    var classJSON = JsonConvert.DeserializeObject<List<DnDClass>>(sr.ReadToEnd());
+                var classJSON = JsonConvert.DeserializeObject<List<DnDClass>>(sr.ReadToEnd());
 
-                    foreach (var r in classJSON)
-                    {
-                        Classes.Add(r);
-                    }
+                foreach (var r in classJSON)
+                {
+                    Classes.Add(r);
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
             }
         }
 
         private static void initRaces()
         {
-            try
+            using (StreamReader sr = new StreamReader("DnDCore\\Races.json"))
             {
-                using (StreamReader sr = new StreamReader("DnDCore\\Races.json"))
-                {
-                    var raceJSON = JsonConvert.DeserializeObject<List<DnDRace>>(sr.ReadToEnd());
+                var raceJSON = JsonConvert.DeserializeObject<List<DnDRace>>(sr.ReadToEnd());
+                List<DnDRace> tempBase = new List<DnDRace>();
 
-                    foreach (var r in raceJSON.Where(z => !z.Name.Contains("base")))
+                foreach (var r in raceJSON)
+                {
+                    // base races with subraces
+                    if (r.BaseRace.Equals(""))
+                    {
+                        if (!tempBase.Contains(r))
+                        {
+                            tempBase.Add(r);
+                        }
+                    }
+                    // base races with NO subraces
+                    else if (r.BaseRace.Equals(r.Name))
                     {
                         Races.Add(r);
                     }
+                    // subraces
+                    else
+                    {
+                        var adding = tempBase.First(z => z.Name.Equals(r.BaseRace));
+                        adding += r;
+
+                        Races.Add(adding);
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
             }
         }
 
         private static void initFeatures()
         {
-            try
+            using (StreamReader sr = new StreamReader("DnDCore\\Features.json"))
             {
-                using (StreamReader sr = new StreamReader("DnDCore\\Features.json"))
-                {
-                    var featureJSON = JsonConvert.DeserializeObject<List<DnDFeature>>(sr.ReadToEnd());
+                var featureJSON = JsonConvert.DeserializeObject<List<DnDFeature>>(sr.ReadToEnd());
 
-                    foreach (var f in featureJSON)
-                    {
-                        Features.Add(f);
-                    }
+                foreach (var f in featureJSON)
+                {
+                    Features.Add(f);
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
             }
         }
 
         private static void initNames()
         {
-            try
+            using (StreamReader sr = new StreamReader("DnDCore\\Names.json"))
             {
-                using (StreamReader sr = new StreamReader("DnDCore\\Names.json"))
-                {
-                    var NamesJSON = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(sr.ReadToEnd());
+                var NamesJSON = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(sr.ReadToEnd());
 
-                    foreach (var n in NamesJSON["Male"])
-                    {
-                        Names_Male.Add(n);
-                    }
-                    foreach (var n in NamesJSON["Female"])
-                    {
-                        Names_Female.Add(n);
-                    }
-                    foreach (var n in NamesJSON["Last"])
-                    {
-                        Names_Last.Add(n);
-                    }
+                foreach (var n in NamesJSON["Male"])
+                {
+                    Names_Male.Add(n);
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
+                foreach (var n in NamesJSON["Female"])
+                {
+                    Names_Female.Add(n);
+                }
+                foreach (var n in NamesJSON["Last"])
+                {
+                    Names_Last.Add(n);
+                }
             }
         }
 
         private static void initSkills()
         {
-            try
+            using (StreamReader sr = new StreamReader("DnDCore\\Skills.json"))
             {
-                using (StreamReader sr = new StreamReader("DnDCore\\Skills.json"))
-                {
-                    var skillJSON = JsonConvert.DeserializeObject<List<DnDSkill>>(sr.ReadToEnd());
+                var skillJSON = JsonConvert.DeserializeObject<List<DnDSkill>>(sr.ReadToEnd());
 
-                    foreach (var s in skillJSON)
-                    {
-                        Skills.Add(s);
-                    }
+                foreach (var s in skillJSON)
+                {
+                    Skills.Add(s);
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
             }
         }
     }
@@ -150,23 +160,61 @@ namespace DnDSupportTypes
     public class DnDRace
     {
         public string Name;
+        public string BaseRace;
         public string Size;
         public int Speed;
         public List<string> Languages = new List<string>();
         public List<DnDFeature> RacialFeatures = new List<DnDFeature>();
         public Dictionary<string, int> AbilityChanges = new Dictionary<string, int>();
 
-        public DnDRace(string name, string size, int speed, List<string> languages, List<string> racialFeatures)
+        public DnDRace(string name, string baserace, string size, int speed, List<string> languages, List<string> racialFeatures, Dictionary<string, int> abilityChanges)
         {
             Name = name;
+            BaseRace = baserace;
             Size = size;
             Speed = speed;
-            Languages = languages.ToList();
-
+            Languages = languages;
             foreach (string thing in racialFeatures)
             {
                 RacialFeatures.Add(DnDCore.Features.Find(z => z.Name.Equals(thing)));
             }
+            AbilityChanges = abilityChanges;
+        }
+
+        private DnDRace(string name, string baserace, string size, int speed, List<string> languages, List<DnDFeature> racialFeatures, Dictionary<string, int> abilityChanges)
+        {
+            Name = name;
+            BaseRace = baserace;
+            Size = size;
+            Speed = speed;
+            Languages = languages;
+            RacialFeatures = racialFeatures;
+            AbilityChanges = abilityChanges;
+        }
+
+        public static DnDRace operator +(DnDRace baseRace, DnDRace subRace)
+        {
+            string endname = subRace.Name;
+            string endbase = subRace.BaseRace;
+            string endsize = baseRace.Size;
+            int endspeed = subRace.Speed > 0 ? subRace.Speed : baseRace.Speed;
+            List<string> endlang = baseRace.Languages.Union(subRace.Languages).ToList();
+            List<DnDFeature> endfeatures = baseRace.RacialFeatures.Union(subRace.RacialFeatures).ToList();
+
+            Dictionary<string, int> endabilities = baseRace.AbilityChanges;
+            foreach (var t in subRace.AbilityChanges)
+            {
+                if (!endabilities.ContainsKey(t.Key))
+                {
+                    endabilities.Add(t.Key, t.Value);
+                }
+                else
+                {
+                    endabilities[t.Key] += t.Value;
+                }
+            }
+
+            return new DnDRace(endname, endbase, endsize, endspeed, endlang, endfeatures, endabilities);
         }
 
         public override string ToString()
@@ -195,7 +243,6 @@ namespace DnDSupportTypes
     public class DnDClass
     {
         public string Name;
-        public string Description;
         public int HitDieType;
         public List<string> PrimaryAbilities = new List<string>();
         public List<string> SaveProficiencies = new List<string>();
@@ -206,7 +253,7 @@ namespace DnDSupportTypes
 
         public override string ToString()
         {
-            string outclass = $"{Name}\n{Description}\nHit Die: {HitDieType}\nPrimary Abilities:";
+            string outclass = $"{Name},\nHit Die: {HitDieType}\nPrimary Abilities:";
             foreach (var pa in PrimaryAbilities)
             {
                 outclass += $" {pa},";
@@ -221,7 +268,7 @@ namespace DnDSupportTypes
             {
                 outclass += $" {gp},";
             }
-            outclass = outclass.Remove(outclass.Length - 1, 1) + $"\nClass Skills - {numSkills} from the following:";
+            outclass = outclass.Remove(outclass.Length - 1, 1) + $"\nClass Skills: {numSkills} from the following:";
             foreach (var cs in ClassSkills)
             {
                 outclass += $" {cs},";
@@ -230,6 +277,41 @@ namespace DnDSupportTypes
 
             var Prog = populateProgression();
 
+            foreach (var cp in Prog)
+            {
+                outclass += $"{cp.Key}\t{cp.Value}\n";
+            }
+            return outclass;
+        }
+
+        private Dictionary<int, string> populateProgression()
+        {
+            var temp = new Dictionary<int, string>();
+            foreach (var p in Progression)
+            {
+                if (!temp.ContainsKey(p.Value))
+                {
+                    temp.Add(p.Value, p.Key);
+                }
+                else
+                {
+                    temp[p.Value] += $", {p.Key}";
+                }
+            }
+            return temp.OrderBy(z => z.Key).ToDictionary(k => k.Key, v => v.Value);
+        }
+    }
+
+    public class DnDSubClass
+    {
+        public string Name;
+        public string BaseClass;
+        public Dictionary<string, int> Progression = new Dictionary<string, int>();
+
+        public override string ToString()
+        {
+            string outclass = $"{Name}\nFeature Progression:\n";
+            var Prog = populateProgression();
             foreach (var cp in Prog)
             {
                 outclass += $"{cp.Key}\t{cp.Value}\n";
@@ -252,7 +334,7 @@ namespace DnDSupportTypes
                     temp[p.Value] += $", {p.Key}";
                 }
             }
-            return temp;
+            return temp.OrderBy(z => z.Key).ToDictionary(k => k.Key, v => v.Value);
         }
     }
 
@@ -261,15 +343,9 @@ namespace DnDSupportTypes
         public string Name;
         public string Description;
 
-        public DnDFeature(string name, string description)
-        {
-            Name = name;
-            Description = description;
-        }
-
         public override string ToString()
         {
-            return $"{Name}\n\t{Description}\n";
+            return $"{Name} - {Description}";
         }
     }
 
@@ -301,21 +377,20 @@ namespace DnDSupportTypes
 
         public string Name = "";
 
-        public int XP = 0;
         public bool isMale = true;
         public DnDRace Race = null;
         public DnDBackground Background;
         public DnDClass Class = null;
-        public int Level = 1;
-        public int ProficiencyBonus = 0;
+        public DnDSubClass SubClass = null;
+        public static string ProficiencyBonus = "1 + (Level / 4), rounded up";
         public int AC = 0;
         public int Initiative = 0;
         public int Speed = 0;
         public string GearProficiencies = "";
         public List<DnDFeature> ClassFeatures = new List<DnDFeature>();
         public List<DnDFeature> RacialFeatures = new List<DnDFeature>();
+        public Dictionary<int, string> FeatureProgression = new Dictionary<int, string>();
         public List<DnDSkill> Skills = new List<DnDSkill>();
-        public int HitDice = 0;
 
         public Dictionary<string, int> Attributes = new Dictionary<string, int>();
         public Dictionary<string, int> AttributeMods = new Dictionary<string, int>();
@@ -328,11 +403,10 @@ namespace DnDSupportTypes
 
             setRace();
             setClass();
+            setSubClass();
+            populateProgression();
             setAttributes();
             setSaves();
-
-            ProficiencyBonus = 1 + (int)Math.Ceiling(Level * .25);
-
         }
 
         private void setSaves()
@@ -348,7 +422,26 @@ namespace DnDSupportTypes
                 int t = rand.Next(0, tempAttr.Count);
                 Attributes[attr] = tempAttr[t];
                 tempAttr.RemoveAt(t);
+                //todo: pull attribute mods into a different function that is calculated AFTER the race mods are applied
                 AttributeMods[attr] = AttrMod(Attributes[attr]);
+            }
+        }
+
+        private void setSubClass()
+        {
+            var temp = DnDCore.SubClasses.Where(z => z.BaseClass.Equals(Class.Name)).ToList();
+            SubClass = temp[rand.Next(0, temp.Count)];
+
+            foreach (var f in SubClass.Progression)
+            {
+                try
+                {
+                    ClassFeatures.Add(DnDCore.Features.Single(z => z.Name.Equals(f.Key)));
+                }
+                catch (InvalidOperationException ioe)
+                {
+                    MessageBox.Show(ioe.Message);
+                }
             }
         }
 
@@ -358,16 +451,13 @@ namespace DnDSupportTypes
 
             foreach (var f in Class.Progression)
             {
-                if (Level >= f.Value)
+                try
                 {
-                    try
-                    {
-                        ClassFeatures.Add(DnDCore.Features.Single(z => z.Name.Equals(f.Key)));
-                    }
-                    catch (InvalidOperationException ioe)
-                    {
-                        MessageBox.Show(ioe.Message);
-                    }
+                    ClassFeatures.Add(DnDCore.Features.Single(z => z.Name.Equals(f.Key)));
+                }
+                catch (InvalidOperationException ioe)
+                {
+                    MessageBox.Show(ioe.Message);
                 }
             }
         }
@@ -410,26 +500,40 @@ namespace DnDSupportTypes
 
         public override string ToString()
         {
-            var verbose = DnDCore.verbose;
-            string output = $"{Name}\nLevel {Level} {Race.Name} {Class.Name}\nProficiency Bonus: +{ProficiencyBonus}\n\n";
+            bool verbose = DnDCore.verbose;
+            string output = $"{Name}\n{Race.Name} {Class.Name}\nProficiency Bonus: +{ProficiencyBonus}\n\n";
             foreach (var kvp in Attributes)
             {
                 output += $"{kvp.Key}  {kvp.Value},  mod {AttributeMods[kvp.Key]}\n";
             }
 
             output += $"\nRacial Features\n";
-            foreach (var kvp in RacialFeatures)
+            foreach (var f in RacialFeatures)
             {
-                output += verbose ? $"\n{kvp.Name}\n\t{kvp.Description}\n" : $"{kvp.Name}, ";
+                output += verbose ? $"\n{f.ToString()}\n" : $"{f.Name}, ";
             }
-            if (!verbose) { output = output.Remove(output.Length - 2, 2); }
+            if (!verbose) { output = output.Remove(output.Length - 2, 2) + "\n"; }
 
-            output += $"\nClass Features\n";
-            foreach (var kvp in ClassFeatures)
+            output += $"\nFeature Progression\n";
+            foreach (var f in FeatureProgression)
             {
-                output += verbose ? $"\n{kvp.Name}\n\t{kvp.Description}\n" : $"{kvp.Name}, ";
+                string temp = "";
+                if (verbose)
+                {
+                    temp = $"Level {f.Key}\n";
+                    var stemp = f.Value.Replace(", ", ",");
+                    foreach (var s in stemp.Split(','))
+                    {
+                        temp += $"\t{DnDCore.Features.First(z => z.Name.Equals(s)).ToString()}\n";
+                    }
+                }
+                else
+                {
+                    temp = $"{f.Key}\t{f.Value}";
+                }
+                output += $"{temp}\n";
             }
-            if (!verbose) { output = output.Remove(output.Length - 2, 2); }
+            if (!verbose) { output = output.Remove(output.Length - 2, 2) + "\n"; }
 
 
 
@@ -437,6 +541,23 @@ namespace DnDSupportTypes
 
             return output;
         }
-    }
 
+        private void populateProgression()
+        {
+            var supertemp = Class.Progression.Union(SubClass.Progression).ToDictionary(k => k.Key, v => v.Value);
+            var megatemp = new Dictionary<int, string>();
+            foreach (var p in supertemp)
+            {
+                if (!megatemp.ContainsKey(p.Value))
+                {
+                    megatemp.Add(p.Value, p.Key);
+                }
+                else
+                {
+                    megatemp[p.Value] += $", {p.Key}";
+                }
+            }
+            FeatureProgression = megatemp.OrderBy(z => z.Key).ToDictionary(k => k.Key, v => v.Value);
+        }
+    }
 }

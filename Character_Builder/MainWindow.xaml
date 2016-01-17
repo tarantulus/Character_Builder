@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:Character_Builder"
         mc:Ignorable="d"
         Title="Character Builder" Height="500" Width="1000" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
@@ -13,6 +14,7 @@
         <Button x:Name="clear" Content="Clear All" HorizontalAlignment="Left" Margin="545,10,0,0" VerticalAlignment="Top" Width="75" TabIndex="1" Click="clear_click"/>
         <TextBox x:Name="output_2" Margin="0,35,10,10" TextWrapping="Wrap" FontSize="10" IsReadOnly="True" TabIndex="3" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Width="347"/>
         <Button x:Name="button_2" Content="Output DnD Core" HorizontalAlignment="Left" Margin="637,10,0,0" VerticalAlignment="Top" Width="125" Click="button_2_Click"/>
-        <CheckBox x:Name="verbosity" Content="Detailed mode?" HorizontalAlignment="Left" Margin="90,13,0,0" VerticalAlignment="Top" Checked="verbosity_Checked" Unchecked="verbosity_Unchecked"/>
+        <CheckBox x:Name="verbosity" Content="Detailed mode?" HorizontalAlignment="Left" Margin="259,13,0,0" VerticalAlignment="Top" Checked="verbosity_Checked" Unchecked="verbosity_Unchecked"/>
+        <xctk:IntegerUpDown x:Name="nud_numCharacters" HorizontalAlignment="Left" Margin="99,10,0,0" VerticalAlignment="Top" Width="70" ClipValueToMinMax="True" FormatString="N0" Increment="1" Minimum="1" Value="1" Maximum="100"/>
     </Grid>
 </Window>

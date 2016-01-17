@@ -1,4 +1,5 @@
 ﻿[
+  /* +++ Barbarian +++ */
   {
     "Name": "Barbarian",
     "HitDieType": 12,
@@ -7,8 +8,8 @@
       "Con"
     ],
     "SaveProficiencies": [
-      "Fort",
-      "Will"
+      "Str",
+      "Con"
     ],
     "GearProficiencies": [
       "Light Armor",
@@ -48,5 +49,73 @@
       "Survival"
     ],
     "NumSkills": 2
+  },
+  /* +++ Bard +++ */
+  {
+    "Name": "Bard",
+    "HitDieType": 8,
+    "PrimaryAbilities": [
+      "Cha",
+      "Dex"
+    ],
+    "SaveProficiencies": [
+      "Dex",
+      "Cha"
+    ],
+    "GearProficiencies": [
+      "Light Armor",
+      "Simple Weapons",
+      "Hand Crossbows",
+      "Longswords",
+      "Rapiers",
+      "Shortswords"
+    ],
+    "Progression": {
+      "Spellcasting (Bard)": 1,
+      "Spellcasting Ability (Bard)": 1,
+      "Spells Known (Bard)": 1,
+      "Spell Slots (Bard)": 1,
+      "Cantrip (Bard)": 1,
+      "Ritual Casting (Bard)": 1,
+      "Spellcasting Focus (Bard)": 1,
+      "Bardic Inspiration": 1,
+      "Jack of All Trades": 2,
+      "Song of Rest": 2,
+      "Bard College": 3,
+      "Expertise (1)": 3,
+      "Expertise (2)": 10,
+      "Ability Score Improvement (1)": 4,
+      "Ability Score Improvement (2)": 8,
+      "Ability Score Improvement (3)": 12,
+      "Ability Score Improvement (4)": 16,
+      "Ability Score Improvement (5)": 19,
+      "Font of Inspiration": 5,
+      "Countercharm": 6,
+      "Magical Secrets (1)": 10,
+      "Magical Secrets (2)": 14,
+      "Magical Secrets (3)": 18,
+      "Superior Inspiration": 20
+    },
+    "ClassSkills": [
+      "Athletics",
+      "Acrobatics",
+      "Sleight of Hand",
+      "Stealth",
+      "Arcana",
+      "History",
+      "Investigation",
+      "Nature",
+      "Religion",
+      "Animal Handling",
+      "Insight",
+      "Medicine",
+      "Perception",
+      "Survival",
+      "Deception",
+      "Intimidation",
+      "Performance",
+      "Persuasion"
+    ],
+    "NumSkills": 3
   }
 ]

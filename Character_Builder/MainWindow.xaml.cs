@@ -33,7 +33,7 @@ namespace Character_Builder
                 return;
             }
 
-            int numChars = 1, current = 0;
+            int numChars = nud_numCharacters.Value.Value, current = 0;
 
             while (current < numChars)
             {

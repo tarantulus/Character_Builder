@@ -253,7 +253,7 @@ namespace DnDSupportTypes
 
         public override string ToString()
         {
-            string outclass = $"{Name},\nHit Die: {HitDieType}\nPrimary Abilities:";
+            string outclass = $"{Name}\nHit Die: {HitDieType}\nPrimary Abilities:";
             foreach (var pa in PrimaryAbilities)
             {
                 outclass += $" {pa},";
@@ -310,7 +310,7 @@ namespace DnDSupportTypes
 
         public override string ToString()
         {
-            string outclass = $"{Name}\nFeature Progression:\n";
+            string outclass = $"({BaseClass}) {Name}\nFeature Progression:\n";
             var Prog = populateProgression();
             foreach (var cp in Prog)
             {
@@ -368,7 +368,7 @@ namespace DnDSupportTypes
 
     public class DnDBackground
     {
-
+        // todo: figure out this mess
     }
 
     public class DnDCharacter
@@ -501,7 +501,7 @@ namespace DnDSupportTypes
         public override string ToString()
         {
             bool verbose = DnDCore.verbose;
-            string output = $"{Name}\n{Race.Name} {Class.Name}\nProficiency Bonus: +{ProficiencyBonus}\n\n";
+            string output = $"{Name}\n{Race.Name} {Class.Name} ({SubClass.Name})\nProficiency Bonus: +{ProficiencyBonus}\n\n";
             foreach (var kvp in Attributes)
             {
                 output += $"{kvp.Key}  {kvp.Value},  mod {AttributeMods[kvp.Key]}\n";
@@ -533,7 +533,6 @@ namespace DnDSupportTypes
                 }
                 output += $"{temp}\n";
             }
-            if (!verbose) { output = output.Remove(output.Length - 2, 2) + "\n"; }
 
 
 

@@ -20,5 +20,26 @@
       "Spirit Walker":  10,
       "Totemic Attunement": 14
     }
+  },
+  /* +++ Bard +++ */
+  {
+    "Name": "College of Lore",
+    "BaseClass": "Bard",
+    "Progression": {
+      "Bonus Proficiencies (Lore)": 3,
+      "Cutting Words": 3,
+      "Additional Magical Secrets": 6,
+      "Peerless Skill": 14
+    }
+  },
+  {
+    "Name": "College of Valor",
+    "BaseClass": "Bard",
+    "Progression": {
+      "Bonus Proficiencies (Valor)": 3,
+      "Combat Inspiration": 3,
+      "Extra Attack (1)": 6,
+      "Battle Magic": 14
+    }
   }
 ]
